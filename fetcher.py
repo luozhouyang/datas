@@ -1,4 +1,5 @@
 import re
+from concurrent.futures import ThreadPoolExecutor
 from urllib import request
 
 # <li>可去地区：<span>待议 </span></li>
@@ -120,6 +121,11 @@ class Fetcher:
             return ""
         return contents[1].strip()
 
+    def fetch_range(self, start=700000, end=840000):
+        with ThreadPoolExecutor(max_workers=self.threads) as executor:
+            for i in range(start, end):
+                executor.submit(self.fetch_one, str(i))
+
     def fetch_one(self, id):
         resp = request.urlopen(url=self.url + id, timeout=3 * 1000)
         if resp.getcode() == 200:
@@ -180,4 +186,4 @@ class Fetcher:
 
 if __name__ == "__main__":
     fetcher = Fetcher()
-    fetcher.fetch_one("700002")
+    fetcher.fetch_range(700000, 700002)

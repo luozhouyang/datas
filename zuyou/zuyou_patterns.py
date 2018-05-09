@@ -59,7 +59,6 @@ class Patterns:
     PATTERN_LIVES = re.compile("居住城市")
     PATTERN_ORIGIN = re.compile("籍　　贯")
 
-    # TODO(luozhouyang) 用户昵称可能是英文，这里会过滤掉
-    PATTERN_CHARS = re.compile("[a-zA-Z<>/&;\"=#.]")
-    PATTERN_265 = re.compile("265")
-    PATTERN_888888 = re.compile("888888")
+    PATTERN_TYPE_1 = re.compile("[/<>SPANlispan;&b\"]")
+    PATTERN_TYPE_ID = re.compile("[</>a-zA-Z&;]")
+    PATTERN_TYPE_PAYMENT = re.compile("[</>a-zA-Z0-9=.#]")

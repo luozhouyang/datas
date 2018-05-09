@@ -15,14 +15,20 @@ class Fetcher:
         self.url = "http://www.89yn.com/member.asp?id="
 
     @staticmethod
-    def _parse_line(line):
-        line = Patterns.PATTERN_CHARS.sub("", line)
-        line = Patterns.PATTERN_265.sub("", line)
-        line = Patterns.PATTERN_888888.sub("", line)
+    def _parse_line(line, type=1):
         contents = line.split("：")
         if len(contents) != 2:
             return ""
-        return contents[1].strip()
+        if type == 1:
+            result = Patterns.PATTERN_TYPE_1.sub("", contents[1])
+            return result.strip()
+        elif type == 2:
+            result = Patterns.PATTERN_TYPE_ID.sub("", contents[1])
+            return result.strip()
+        elif type == 3:
+            result = Patterns.PATTERN_TYPE_PAYMENT.sub("", contents[1])
+            return result.strip()
+        return ""
 
     def fetch_range(self, start=700000, end=840000):
         with ThreadPoolExecutor(max_workers=self.threads) as executor:
@@ -42,7 +48,7 @@ class Fetcher:
                 if Patterns.PATTERN_NAME.findall(l):
                     item.name = self._parse_line(l)
                 if Patterns.PATTERN_ID.findall(l):
-                    item.id = self._parse_line(l)
+                    item.id = self._parse_line(l, type=2)
                 if Patterns.PATTERN_GENDER.findall(l):
                     item.gender = self._parse_line(l)
                 if Patterns.PATTERN_AGE.findall(l):
@@ -70,7 +76,7 @@ class Fetcher:
                 if Patterns.PATTERN_AREA.findall(l):
                     item.area = self._parse_line(l)
                 if Patterns.PATTERN_PAYMENT.findall(l):
-                    item.payment = self._parse_line(l)
+                    item.payment = self._parse_line(l, type=3)
                 if Patterns.PATTERN_SERVE_TIME.findall(l):
                     item.serve_time = self._parse_line(l)
                 if Patterns.PATTERN_LANGUAGE.findall(l):
@@ -84,9 +90,9 @@ class Fetcher:
                 if Patterns.PATTERN_MESSAGE.findall(l):
                     item.message = self._parse_line(l)
 
-            print(item)
+            print(item.lives, item.occupational)
 
 
 if __name__ == "__main__":
     fetcher = Fetcher()
-    fetcher.fetch_range(700000, 700002)
+    fetcher.fetch_range(700000, 700020)

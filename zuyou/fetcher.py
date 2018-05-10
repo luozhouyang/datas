@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib import request
 
 from zuyou.zuyou_patterns import Patterns
@@ -13,6 +13,7 @@ class Fetcher:
         self.id_start = 700000
         self.id_end = 840000
         self.url = "http://www.89yn.com/member.asp?id="
+        self.results = []
 
     @staticmethod
     def _parse_line(line, type=1):
@@ -21,22 +22,57 @@ class Fetcher:
             return ""
         if type == 1:
             result = Patterns.PATTERN_TYPE_1.sub("", contents[1])
-            return result.strip()
+            return result.replace(",\s+", " ").strip()
         elif type == 2:
             result = Patterns.PATTERN_TYPE_ID.sub("", contents[1])
-            return result.strip()
+            return result.replace(",\s+", " ").strip()
         elif type == 3:
             result = Patterns.PATTERN_TYPE_PAYMENT.sub("", contents[1])
-            return result.strip()
+            return result.replace(",\s+", " ").strip()
         return ""
 
     def fetch_range(self, start=700000, end=840000):
         with ThreadPoolExecutor(max_workers=self.threads) as executor:
-            for i in range(start, end):
-                executor.submit(self.fetch_one, str(i))
+            futures = {executor.submit(self.fetch_one, str(i)): i for i in range(start, end)}
+            for future in as_completed(futures):
+                count = 0
+                try:
+                    item = future.result()
+                except Exception as exc:
+                    print(exc)
+                else:
+                    if item:
+                        print(item)
+                        self.results.append(item)
+                        count += 1
+                        if count % 1000 == 0:
+                            self._write_to_file()
+                            self.results.clear()
+
+        self._write_to_file()
+
+    def _write_to_file(self):
+        import os
+        import time
+        if not os.path.exists(self.out_dir):
+            os.makedirs(self.out_dir)
+        file_path = self.out_dir + os.sep + str(int(round(time.time() * 1000))) + ".csv"
+        print(file_path)
+        with open(file_path, mode="a", encoding="utf-8", buffering=8192) as file:
+            file.write("姓名, Id, 性别, 年龄, 生日, 星座, 身高, 体重, 体型, 学位, 婚姻," +
+                       "职业, 居住城市, 籍贯, 可去地区, 是否收费, 服务时间, 使用语种, 提供服务" +
+                       "兴趣爱好, 性格类型, 心情留言\n")
+            for item in self.results:
+                line = item.name + "," + item.id + "," + item.gender + "," + item.age + "," + item.birth + "," + \
+                       item.constellation + "," + item.height + "," + item.weight + "," + item.size + "," + \
+                       item.degree + "," + item.marriage + "," + item.occupational + "," + item.lives + "," + \
+                       item.origin + "," + item.area + "," + item.payment + "," + item.serve_time + "," + \
+                       item.language + "," + item.serve_type + "," + item.hobbits + "," + item.character + "," + \
+                       item.message + "\n"
+                file.write(line)
 
     def fetch_one(self, id):
-        resp = request.urlopen(url=self.url + id, timeout=3 * 1000)
+        resp = request.urlopen(url=self.url + id, timeout=10)
         if resp.getcode() == 200:
             item = Item()
             page = resp.read().decode('gbk')
@@ -90,9 +126,10 @@ class Fetcher:
                 if Patterns.PATTERN_MESSAGE.findall(l):
                     item.message = self._parse_line(l)
 
-            print(item.lives, item.occupational)
+            if item.id:
+                return item
 
 
 if __name__ == "__main__":
     fetcher = Fetcher()
-    fetcher.fetch_range(700000, 700020)
+    fetcher.fetch_range()

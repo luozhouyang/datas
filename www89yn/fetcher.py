@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib import request
 
 from zuyou.zuyou_patterns import Patterns
-from .zuyou_item import Item
+from .www89yn_item import Item
 
 
 class Fetcher:
@@ -13,7 +13,7 @@ class Fetcher:
         self.threads = threads
         self.id_start = 700000
         self.id_end = 840000
-        self.url = "http://www.89yn.com/member.asp?id="
+        self.url = "http://www.www89yn.com/member.asp?id="
         self.results = []
 
     @staticmethod

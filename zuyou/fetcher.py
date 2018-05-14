@@ -1,3 +1,4 @@
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib import request
 
@@ -22,13 +23,13 @@ class Fetcher:
             return ""
         if type == 1:
             result = Patterns.PATTERN_TYPE_1.sub("", contents[1])
-            return result.replace(",\s+", " ").strip()
+            return result.replace(",", ";").replace("\s+", " ").strip()
         elif type == 2:
             result = Patterns.PATTERN_TYPE_ID.sub("", contents[1])
-            return result.replace(",\s+", " ").strip()
+            return result.replace(",", ";").replace("\s+", " ").strip()
         elif type == 3:
             result = Patterns.PATTERN_TYPE_PAYMENT.sub("", contents[1])
-            return result.replace(",\s+", " ").strip()
+            return result.replace(",", ";").replace("\s+", " ").strip()
         return ""
 
     def fetch_range(self, start=700000, end=840000):
@@ -45,7 +46,7 @@ class Fetcher:
                         print(item)
                         self.results.append(item)
                         count += 1
-                        if count % 1000 == 0:
+                        if count % 100 == 0:
                             self._write_to_file()
                             self.results.clear()
 
@@ -72,7 +73,8 @@ class Fetcher:
                 file.write(line)
 
     def fetch_one(self, id):
-        resp = request.urlopen(url=self.url + id, timeout=10)
+        time.sleep(0.3000)
+        resp = request.urlopen(url=self.url + id, timeout=0.5)
         if resp.getcode() == 200:
             item = Item()
             page = resp.read().decode('gbk')
@@ -125,11 +127,10 @@ class Fetcher:
                     item.character = self._parse_line(l)
                 if Patterns.PATTERN_MESSAGE.findall(l):
                     item.message = self._parse_line(l)
-
             if item.id:
                 return item
 
 
 if __name__ == "__main__":
-    fetcher = Fetcher()
-    fetcher.fetch_range()
+    fetcher = Fetcher(out_dir="/home/allen/PycharmProjects/datas/data", threads=2)
+    fetcher.fetch_range(700000, 701000)

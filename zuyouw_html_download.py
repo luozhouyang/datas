@@ -1,16 +1,13 @@
 import time
 from urllib import request
-import chardet
 
 headers = {
     'Connection': 'keep-alive',
     'Cache-Control': 'max-age=0',
-    'Accept': 'text/html, */*; q=0.01',
+    'Accept': 'text/html',
     'X-Requested-With': 'XMLHttpRequest',
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36',
     'DNT': '1',
-    'Accept-Encoding': 'gzip, deflate, sdch',
-    'Accept-Language': 'zh-CN,zh;q=0.8,ja;q=0.6'
 }
 for id in range(162315, 167900):
     try:
@@ -21,7 +18,7 @@ for id in range(162315, 167900):
         resp = request.urlopen(req, timeout=2.0)
         if resp.getcode() != 200:
             continue
-        page = resp.read().decode('gb2312')
+        page = resp.read().decode('utf-16-be')
         file = '/home/allen/PycharmProjects/datas/zuyouw_data/' + str(id) + '.txt'
         with open(file, mode='wt', encoding='utf-8', buffering=8192) as f:
             f.write(page)

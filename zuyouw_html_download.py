@@ -18,8 +18,8 @@ for id in range(162315, 167900):
         resp = request.urlopen(req, timeout=2.0)
         if resp.getcode() != 200:
             continue
-        page = resp.read().decode('utf-16-be')
-        file = '/home/allen/PycharmProjects/datas/zuyouw_data/' + str(id) + '.txt'
+        page = resp.read().decode('utf-8')
+        file = '/home/allen/PycharmProjects/datas/zuyouw_data/' + str(id) + '.html'
         with open(file, mode='wt', encoding='utf-8', buffering=8192) as f:
             f.write(page)
     except Exception as e:

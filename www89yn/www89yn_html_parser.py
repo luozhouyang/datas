@@ -3,7 +3,7 @@ import os
 from www89yn.www89yn_patterns import Patterns
 from www89yn.www89yn_item import Item
 
-files = os.listdir("/home/allen/PycharmProjects/datas/data")
+files = os.listdir("/home/allen/PycharmProjects/datas/www89yn_data")
 infos = []
 
 
@@ -79,7 +79,7 @@ for f in files:
             if Patterns.PATTERN_MESSAGE.findall(l):
                 item.message = _parse_line(l)
         if item.id:
-            print(item)
+            # print(count)
             infos.append(item)
 outdir = "/home/allen/PycharmProjects/datas/www89yn_data/"
 if not os.path.exists(outdir):
@@ -89,7 +89,10 @@ with open(outfile, mode="wt", encoding="utf-8", buffering=8192) as f:
     f.write("姓名, Id, 性别, 年龄, 生日, 星座, 身高, 体重, 体型, 学位, 婚姻," +
             "职业, 居住城市, 籍贯, 可去地区, 是否收费, 服务时间, 使用语种, 提供服务," +
             "兴趣爱好, 性格类型, 心情留言\n")
+    count = 0
     for item in infos:
+        count += 1
+        print(count)
         line = item.name + "," + item.id + "," + item.gender + "," + item.age + "," + item.birth + "," + \
                item.constellation + "," + item.height + "," + item.weight + "," + item.size + "," + \
                item.degree + "," + item.marriage + "," + item.occupational + "," + item.lives + "," + \

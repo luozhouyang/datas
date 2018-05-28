@@ -1,4 +1,5 @@
 import csv
+import os
 from collections import Counter, OrderedDict
 
 import matplotlib.pyplot as plt
@@ -101,119 +102,46 @@ class Visualizer:
         plt.savefig("images/age_line.png")
 
     def plot_age_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        # age_dict = self._age_dict()
-        total = self._total_value(self.ages_dict.values())
-        plt.figure(figsize=(7, 7))
-        plt.title('Age distribution pie chart')
-        labels = []
-        for k in self.ages_dict.keys():
-            v = "%s - %.2f" % (k, (int(self.ages_dict[k]) / total * 100))
-            labels.append(v + "%")
-        plt.pie(self.ages_dict.values(), labels=labels)
-        plt.savefig('images/age_pie.png')
+        self._plot_pie("Age distribution pie chart", self.ages_dict, "age_pie.png")
 
     def plot_age_men_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        plt.figure(figsize=(8, 8))
-        plt.title("Male age distribution", )
-        total = self._total_value(self.ages_men_dict.values())
-        labels = []
-        for k in self.ages_men_dict.keys():
-            label = "%s - %.2f" % (k, (int(self.ages_men_dict[k]) / total * 100))
-            labels.append(label + "%")
-        plt.pie(self.ages_men_dict.values(), labels=labels)
-        plt.savefig('images/age_men_pie.png')
+        self._plot_pie("Male age distribution pie chart", self.ages_men_dict, "age_men_pie.png")
 
     def plot_age_women_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        plt.figure(figsize=(8, 8))
-        plt.title("Female age distribution", )
-        total = self._total_value(self.ages_women_dict.values())
-        labels = []
-        for k in self.ages_women_dict.keys():
-            label = "%s - %.2f" % (k, (int(self.ages_women_dict[k]) / total * 100))
-            labels.append(label + "%")
-        plt.pie(self.ages_women_dict.values(), labels=labels)
-        plt.savefig('images/age_women_pie.png')
+        self._plot_pie("Female age distribution pie chart", self.ages_women_dict, "age_women_pie.png")
 
     def print_age_table(self):
-        print("======Age distribution table")
-        table = PrettyTable(["Age", "Count", "Percent"])
-        table.align["Age"] = "l"
-        table.padding_width = 1
-        total = self._total_value(self.ages_dict.values())
-        for k, v in self.ages_dict.items():
-            p = "%.2f" % (int(v) / total * 100)
-            table.add_row([k, v, p])
-        print(table)
-        print("Total: %d" % total)
+        self._print_table(["Age", "Count", "Percent"], "Age distribution table", self.ages_dict)
 
     def print_age_men_table(self):
-        print("======Male age distribution table")
-        table = PrettyTable(["Age", "Count", "Percent"])
-        table.align["Age"] = "l"
-        table.padding_width = 1
-        total = self._total_value(self.ages_men_dict.values())
-        for k, v in self.ages_men_dict.items():
-            p = "%.2f" % (int(v) / total * 100)
-            table.add_row([k, v, p])
-        print(table)
-        print("Total: %d" % total)
+        self._print_table(["Age", "Count", "Percent"], "Male age distribution table", self.ages_men_dict)
 
     def print_age_women_table(self):
-        print("======Female age distribution table")
-        table = PrettyTable(["Age", "Count", "Percent"])
-        table.align["Age"] = "l"
-        table.padding_width = 1
-        total = self._total_value(self.ages_women_dict.values())
-        for k, v in self.ages_women_dict.items():
-            p = "%.2f" % (int(v) / total * 100)
-            table.add_row([k, v, p])
-        print(table)
-        print("Total: %d" % total)
+        self._print_table(["Age", "Count", "Percent"], "Female age distribution table", self.ages_women_dict)
+
+    def _plot_pie(self, title, collection, filename):
+        if not self.has_parse_file:
+            self.parse_csv_file()
+        total = self._total_value(collection.values())
+        plt.figure(figsize=(7, 7))
+        plt.title(title)
+        labels = []
+        for k, v in collection.items():
+            v = "%s - %.2f" % (k, int(v) / total * 100)
+            labels.append(v + "%")
+        plt.pie(collection.values(), labels=labels)
+        plt.savefig(os.path.join("images", filename))
 
     def plot_service_types_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        total = self._total_value(self.service_types_dict.values())
-        plt.figure(figsize=(7, 7))
-        plt.title('Service types distribution pie chart')
-        labels = []
-        for k, v in self.service_types_dict.items():
-            v = "%s - %.2f" % (k, int(v) / total * 100)
-            labels.append(v + "%")
-        plt.pie(self.service_types_dict.values(), labels=labels)
-        plt.savefig('images/service_types_pie.png')
+        self._plot_pie("Service types distribution pie chart", self.service_types_dict, "service_types_pie.png")
 
     def plot_service_types_men_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        total = self._total_value(self.service_types_men_dict.values())
-        plt.figure(figsize=(7, 7))
-        plt.title('Service types distribution pie chart')
-        labels = []
-        for k, v in self.service_types_men_dict.items():
-            v = "%s - %.2f" % (k, int(v) / total * 100)
-            labels.append(v + "%")
-        plt.pie(self.service_types_men_dict.values(), labels=labels)
-        plt.savefig('images/service_types_men_pie.png')
+        self._plot_pie("Male service types distribution pie chart", self.service_types_men_dict,
+                       "service_types_men_pie.png")
 
     def plot_service_types_women_pie(self):
-        if not self.has_parse_file:
-            self.parse_csv_file()
-        total = self._total_value(self.service_types_women_dict.values())
-        plt.figure(figsize=(7, 7))
-        plt.title('Service types distribution pie chart')
-        labels = []
-        for k, v in self.service_types_women_dict.items():
-            v = "%s - %.2f" % (k, int(v) / total * 100)
-            labels.append(v + "%")
-        plt.pie(self.service_types_women_dict.values(), labels=labels)
-        plt.savefig('images/service_types_women_pie.png')
+        self._plot_pie("Female service types distribution pie chart", self.service_types_women_dict,
+                       "service_types_women_pie.png")
 
     def _print_table(self, columns, header, collection):
         print("=====" + header)
@@ -228,18 +156,14 @@ class Visualizer:
         print("Total: %d" % total)
 
     def print_service_types_table(self):
-        self._print_table(["Type", "Count", "Percent"],
-                          "Service types distribution table",
-                          self.service_types_dict)
+        self._print_table(["Type", "Count", "Percent"], "Service types distribution table", self.service_types_dict)
 
     def print_service_types_men_table(self):
-        self._print_table(["Type", "Count", "Percent"],
-                          "Male service types distribution table",
+        self._print_table(["Type", "Count", "Percent"], "Male service types distribution table",
                           self.service_types_men_dict)
 
     def print_service_types_women_table(self):
-        self._print_table(["Type", "Count", "Percent"],
-                          "Female service types distribution table",
+        self._print_table(["Type", "Count", "Percent"], "Female service types distribution table",
                           self.service_types_women_dict)
 
 

@@ -1,7 +1,7 @@
 import time
 from urllib import request
 
-for id in range(713355, 800000):
+for id in range(714837, 800000):
     try:
         time.sleep(1)
         resp = request.urlopen('http://www.89yn.com/member.asp?id=' + str(id), timeout=2.0)

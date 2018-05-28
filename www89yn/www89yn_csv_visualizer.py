@@ -66,7 +66,7 @@ class Visualizer:
             for row in reader:
                 parse_line_callback(row)
 
-    def visualize_age_line(self):
+    def plot_age_line(self):
         if not self.has_parse_file:
             self.parse_csv_file()
         plt.figure(figsize=(10, 7))
@@ -75,14 +75,14 @@ class Visualizer:
         plt.xlabel('Age')
         plt.savefig("images/age_line.png")
 
-    def visualize_age_pie(self):
+    def plot_age_pie(self):
         if not self.has_parse_file:
             self.parse_csv_file()
         # age_dict = self._age_dict()
         total = 0
         for _, v in self.ages_dict.items():
             total += v
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(7, 7))
         plt.title('Age distribution pie chart')
         labels = []
         for k in self.ages_dict.keys():
@@ -91,25 +91,44 @@ class Visualizer:
         plt.pie(self.ages_dict.values(), labels=labels)
         plt.savefig('images/age_pie.png')
 
-    def visualize_age_men_line(self):
+    def plot_age_men_pie(self):
         if not self.has_parse_file:
             self.parse_csv_file()
         plt.figure(figsize=(8, 8))
         plt.title("Male age distribution", )
-        # total = 0
-        # for v in self.ages_men_dict.values():
-        #     total += int(v)
-        # labels = []
-        # for k in self.ages_men_dict.keys():
-        #     labels.append("%s - %.2f" % (k, int(k) / total))
-        plt.pie(self.ages_men_dict.values(), labels=self.ages_men_dict.keys())
-        # plt.legend()
+        total = 0
+        for v in self.ages_men_dict.values():
+            total += int(v)
+        labels = []
+        for k in self.ages_men_dict.keys():
+            label = "%s - %.2f" % (k, (int(self.ages_men_dict[k]) / total * 100))
+            labels.append(label + "%")
+        plt.pie(self.ages_men_dict.values(), labels=labels)
         plt.savefig('images/age_men_pie.png')
+
+    def plot_age_women_pie(self):
+        if not self.has_parse_file:
+            self.parse_csv_file()
+        plt.figure(figsize=(8, 8))
+        plt.title("Female age distribution", )
+        total = 0
+        for v in self.ages_women_dict.values():
+            total += int(v)
+        labels = []
+        for k in self.ages_women_dict.keys():
+            label = "%s - %.2f" % (k, (int(self.ages_women_dict[k]) / total * 100))
+            labels.append(label + "%")
+        plt.pie(self.ages_women_dict.values(), labels=labels)
+        plt.savefig('images/age_women_pie.png')
 
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
     v.parse_csv_file()
-    v.visualize_age_line()
-    v.visualize_age_pie()
-    v.visualize_age_men_line()
+    v.plot_age_line()
+    v.plot_age_pie()
+    # v.print_age_table()
+    v.plot_age_men_pie()
+    # v.print_age_men_table()
+    v.plot_age_women_pie()
+    # v.print_age_women_table()

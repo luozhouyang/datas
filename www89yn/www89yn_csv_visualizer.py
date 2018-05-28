@@ -2,6 +2,7 @@ import csv
 from collections import Counter, OrderedDict
 
 import matplotlib.pyplot as plt
+from prettytable import PrettyTable
 
 
 class Visualizer:
@@ -66,6 +67,13 @@ class Visualizer:
             for row in reader:
                 parse_line_callback(row)
 
+    @staticmethod
+    def _total_value(values):
+        total = 0
+        for v in values:
+            total += int(v)
+        return total
+
     def plot_age_line(self):
         if not self.has_parse_file:
             self.parse_csv_file()
@@ -79,9 +87,7 @@ class Visualizer:
         if not self.has_parse_file:
             self.parse_csv_file()
         # age_dict = self._age_dict()
-        total = 0
-        for _, v in self.ages_dict.items():
-            total += v
+        total = self._total_value(self.ages_dict.values())
         plt.figure(figsize=(7, 7))
         plt.title('Age distribution pie chart')
         labels = []
@@ -96,9 +102,7 @@ class Visualizer:
             self.parse_csv_file()
         plt.figure(figsize=(8, 8))
         plt.title("Male age distribution", )
-        total = 0
-        for v in self.ages_men_dict.values():
-            total += int(v)
+        total = self._total_value(self.ages_men_dict.values())
         labels = []
         for k in self.ages_men_dict.keys():
             label = "%s - %.2f" % (k, (int(self.ages_men_dict[k]) / total * 100))
@@ -111,9 +115,7 @@ class Visualizer:
             self.parse_csv_file()
         plt.figure(figsize=(8, 8))
         plt.title("Female age distribution", )
-        total = 0
-        for v in self.ages_women_dict.values():
-            total += int(v)
+        total = self._total_value(self.ages_women_dict.values())
         labels = []
         for k in self.ages_women_dict.keys():
             label = "%s - %.2f" % (k, (int(self.ages_women_dict[k]) / total * 100))
@@ -121,14 +123,50 @@ class Visualizer:
         plt.pie(self.ages_women_dict.values(), labels=labels)
         plt.savefig('images/age_women_pie.png')
 
+    def print_age_table(self):
+        print("======Age distribution table")
+        table = PrettyTable(["Age", "Count", "Percent"])
+        table.align["Age"] = "l"
+        table.padding_width = 1
+        total = self._total_value(self.ages_dict.values())
+        for k, v in self.ages_dict.items():
+            p = "%.2f" % (int(v) / total * 100)
+            table.add_row([k, v, p])
+        print(table)
+        print("Total: %d" % total)
+
+    def print_age_men_table(self):
+        print("======Male age distribution table")
+        table = PrettyTable(["Age", "Count", "Percent"])
+        table.align["Age"] = "l"
+        table.padding_width = 1
+        total = self._total_value(self.ages_men_dict.values())
+        for k, v in self.ages_men_dict.items():
+            p = "%.2f" % (int(v) / total * 100)
+            table.add_row([k, v, p])
+        print(table)
+        print("Total: %d" % total)
+
+    def print_age_women_table(self):
+        print("======Female age distribution table")
+        table = PrettyTable(["Age", "Count", "Percent"])
+        table.align["Age"] = "l"
+        table.padding_width = 1
+        total = self._total_value(self.ages_women_dict.values())
+        for k, v in self.ages_women_dict.items():
+            p = "%.2f" % (int(v) / total * 100)
+            table.add_row([k, v, p])
+        print(table)
+        print("Total: %d" % total)
+
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
     v.parse_csv_file()
     v.plot_age_line()
     v.plot_age_pie()
-    # v.print_age_table()
     v.plot_age_men_pie()
-    # v.print_age_men_table()
     v.plot_age_women_pie()
-    # v.print_age_women_table()
+    v.print_age_table()
+    v.print_age_men_table()
+    v.print_age_women_table()

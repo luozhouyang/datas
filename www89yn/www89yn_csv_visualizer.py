@@ -17,6 +17,9 @@ class Visualizer:
         self.educations_dict = None
         self.educations_men_dict = None
         self.educations_women_dict = None
+        self.service_types_dict = None
+        self.service_types_men_dict = None
+        self.service_types_women_dict = None
 
     def parse_csv_file(self):
         ages = []
@@ -29,23 +32,34 @@ class Visualizer:
         origins = []
         origins_men = []
         origins_women = []
+        service_types = []
+        service_types_men = []
+        service_types_women = []
 
         def callback(row):
             age = str(row[3].replace('岁', ''))
             gender = row[2].strip()
             education = row[9].strip()
             origin = row[13].strip()
+            services_tmp = row[18].strip().split(";")
+            services = []
+            for v in services_tmp:
+                if v.strip():
+                    services.append(v.strip())
             ages.append(age)
             educations.append(education)
             origins.append(origin)
+            service_types.extend(services)
             if gender == "男":
                 ages_men.append(age)
                 educations_men.append(education)
                 origins_men.append(origin)
+                service_types_men.extend(services)
             elif gender == "女":
                 ages_women.append(age)
                 educations_women.append(education)
                 origins_women.append(origin)
+                service_types_women.extend(services)
             genders.append(gender)
 
         self._read_csv_file(callback)
@@ -57,6 +71,9 @@ class Visualizer:
         self.educations_dict = OrderedDict(sorted(Counter(educations).items()))
         self.educations_men_dict = OrderedDict(sorted(Counter(educations_men).items()))
         self.educations_women_dict = OrderedDict(sorted(Counter(educations_women).items()))
+        self.service_types_dict = OrderedDict(sorted(Counter(service_types).items()))
+        self.service_types_men_dict = OrderedDict(sorted(Counter(service_types_men).items()))
+        self.service_types_women_dict = OrderedDict(sorted(Counter(service_types_women).items()))
 
         self.has_parse_file = True
 
@@ -159,10 +176,77 @@ class Visualizer:
         print(table)
         print("Total: %d" % total)
 
+    def plot_service_types_pie(self):
+        if not self.has_parse_file:
+            self.parse_csv_file()
+        total = self._total_value(self.service_types_dict.values())
+        plt.figure(figsize=(7, 7))
+        plt.title('Service types distribution pie chart')
+        labels = []
+        for k, v in self.service_types_dict.items():
+            v = "%s - %.2f" % (k, int(v) / total * 100)
+            labels.append(v + "%")
+        plt.pie(self.service_types_dict.values(), labels=labels)
+        plt.savefig('images/service_types_pie.png')
+
+    def plot_service_types_men_pie(self):
+        if not self.has_parse_file:
+            self.parse_csv_file()
+        total = self._total_value(self.service_types_men_dict.values())
+        plt.figure(figsize=(7, 7))
+        plt.title('Service types distribution pie chart')
+        labels = []
+        for k, v in self.service_types_men_dict.items():
+            v = "%s - %.2f" % (k, int(v) / total * 100)
+            labels.append(v + "%")
+        plt.pie(self.service_types_men_dict.values(), labels=labels)
+        plt.savefig('images/service_types_men_pie.png')
+
+    def plot_service_types_women_pie(self):
+        if not self.has_parse_file:
+            self.parse_csv_file()
+        total = self._total_value(self.service_types_women_dict.values())
+        plt.figure(figsize=(7, 7))
+        plt.title('Service types distribution pie chart')
+        labels = []
+        for k, v in self.service_types_women_dict.items():
+            v = "%s - %.2f" % (k, int(v) / total * 100)
+            labels.append(v + "%")
+        plt.pie(self.service_types_women_dict.values(), labels=labels)
+        plt.savefig('images/service_types_women_pie.png')
+
+    def _print_table(self, columns, header, collection):
+        print("=====" + header)
+        table = PrettyTable(columns)
+        table.align[columns[0]] = "l"
+        table.padding_width = 1
+        total = self._total_value(collection.values())
+        for k, v in collection.items():
+            p = "%.2f" % (int(v) / total * 100)
+            table.add_row([k, v, p])
+        print(table)
+        print("Total: %d" % total)
+
+    def print_service_types_table(self):
+        self._print_table(["Type", "Count", "Percent"],
+                          "Service types distribution table",
+                          self.service_types_dict)
+
+    def print_service_types_men_table(self):
+        self._print_table(["Type", "Count", "Percent"],
+                          "Male service types distribution table",
+                          self.service_types_men_dict)
+
+    def print_service_types_women_table(self):
+        self._print_table(["Type", "Count", "Percent"],
+                          "Female service types distribution table",
+                          self.service_types_women_dict)
+
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
     v.parse_csv_file()
+
     v.plot_age_line()
     v.plot_age_pie()
     v.plot_age_men_pie()
@@ -170,3 +254,10 @@ if __name__ == "__main__":
     v.print_age_table()
     v.print_age_men_table()
     v.print_age_women_table()
+
+    v.plot_service_types_pie()
+    v.plot_service_types_men_pie()
+    v.plot_service_types_women_pie()
+    v.print_service_types_table()
+    v.print_service_types_men_table()
+    v.print_service_types_women_table()

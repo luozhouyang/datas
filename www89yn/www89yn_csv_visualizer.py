@@ -75,6 +75,9 @@ class Visualizer:
         self.service_types_dict = OrderedDict(sorted(Counter(service_types).items()))
         self.service_types_men_dict = OrderedDict(sorted(Counter(service_types_men).items()))
         self.service_types_women_dict = OrderedDict(sorted(Counter(service_types_women).items()))
+        self.origin_dict = OrderedDict(sorted(Counter(origins).items()))
+        self.origin_men_dict = OrderedDict(sorted(Counter(origins_men).items()))
+        self.origin_women_dict = OrderedDict(sorted(Counter(origins_women).items()))
 
         self.has_parse_file = True
 
@@ -119,7 +122,7 @@ class Visualizer:
     def print_age_women_table(self):
         self._print_table(["Age", "Count", "Percent"], "Female age distribution table", self.ages_women_dict)
 
-    def _plot_pie(self, title, collection, filename):
+    def _plot_pie(self, title, collection, filename, rotatelabels=False):
         if not self.has_parse_file:
             self.parse_csv_file()
         total = self._total_value(collection.values())
@@ -129,7 +132,7 @@ class Visualizer:
         for k, v in collection.items():
             v = "%s - %.2f" % (k, int(v) / total * 100)
             labels.append(v + "%")
-        plt.pie(collection.values(), labels=labels)
+        plt.pie(collection.values(), labels=labels, rotatelabels=rotatelabels)
         plt.savefig(os.path.join("images", filename))
 
     def plot_service_types_pie(self):
@@ -166,6 +169,45 @@ class Visualizer:
         self._print_table(["Type", "Count", "Percent"], "Female service types distribution table",
                           self.service_types_women_dict)
 
+    def plot_edu_pie(self):
+        self._plot_pie("Education distribution pie chart", self.educations_dict, "edu_pie.png")
+
+    def plot_edu_men_pie(self):
+        self._plot_pie("Male education distribution pie chart", self.educations_men_dict, "edu_men_pie.png")
+
+    def plot_edu_women_pie(self):
+        self._plot_pie("Female education distribution pie chart", self.educations_women_dict, "edu_women_pie.png")
+
+    def print_edu(self):
+        self._print_table(columns=["Education", "Count", "Percent"], header="Education distribution table",
+                          collection=self.educations_dict)
+
+    def print_edu_men(self):
+        self._print_table(columns=["Education", "Count", "Percent"], header="Male education distribution table",
+                          collection=self.educations_men_dict)
+
+    def print_edu_women(self):
+        self._print_table(columns=["Education", "Count", "Percent"], header="Female education distribution table",
+                          collection=self.educations_women_dict)
+
+    def plot_origin_pie(self):
+        self._plot_pie("Origin distribution pie chart", self.origin_dict, "origin_pie.png")
+
+    def plot_origin_men_pie(self):
+        self._plot_pie("Male origin distribution pie chart", self.origin_men_dict, "origin_men_pie.png")
+
+    def plot_origin_women_pie(self):
+        self._plot_pie("Female origin distribution pie chart", self.origin_women_dict, "origin_women_pie.png")
+
+    def print_origin(self):
+        self._print_table(["Origin", "Count", "Percent"], "Origin distribution table", self.origin_dict)
+
+    def print_origin_men(self):
+        self._print_table(["Origin", "Count", "Percent"], "Male origin distribution table", self.origin_men_dict)
+
+    def print_origin_women(self):
+        self._print_table(["Origin", "Count", "Percent"], "Female origin distribution table", self.origin_women_dict)
+
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
@@ -185,3 +227,17 @@ if __name__ == "__main__":
     v.print_service_types_table()
     v.print_service_types_men_table()
     v.print_service_types_women_table()
+
+    v.plot_edu_pie()
+    v.plot_edu_men_pie()
+    v.plot_edu_women_pie()
+    v.print_edu()
+    v.print_edu_men()
+    v.print_edu_women()
+
+    v.plot_origin_pie()
+    v.plot_origin_men_pie()
+    v.plot_origin_women_pie()
+    v.print_origin()
+    v.print_origin_men()
+    v.print_origin_women()

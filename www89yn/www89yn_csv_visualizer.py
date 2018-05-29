@@ -21,6 +21,9 @@ class Visualizer:
         self.service_types_dict = None
         self.service_types_men_dict = None
         self.service_types_women_dict = None
+        self.origin_dict = None
+        self.origin_men_dict = None
+        self.origin_women_dict = None
 
     def parse_csv_file(self):
         ages = []
@@ -208,36 +211,71 @@ class Visualizer:
     def print_origin_women(self):
         self._print_table(["Origin", "Count", "Percent"], "Female origin distribution table", self.origin_women_dict)
 
+    def print_age_tables(self):
+        self.print_age_table()
+        self.print_age_men_table()
+        self.print_age_women_table()
+
+    def plot_age_pies(self):
+        self.plot_age_pie()
+        self.plot_age_men_pie()
+        self.plot_age_women_pie()
+
+    def plot_and_print_age(self):
+        self.plot_age_pies()
+        self.print_age_tables()
+
+    def print_service_types_tables(self):
+        self.print_service_types_table()
+        self.print_service_types_men_table()
+        self.print_service_types_women_table()
+
+    def plot_service_types_pies(self):
+        self.plot_service_types_pie()
+        self.plot_service_types_men_pie()
+        self.plot_service_types_women_pie()
+
+    def plot_and_print_service_types(self):
+        self.plot_service_types_pies()
+        self.print_service_types_tables()
+
+    def print_edu_tables(self):
+        self.print_edu()
+        self.print_edu_men()
+        self.print_edu_women()
+
+    def plot_edu_pies(self):
+        self.plot_edu_pie()
+        self.plot_edu_men_pie()
+        self.plot_edu_women_pie()
+
+    def plot_and_print_edu(self):
+        self.plot_edu_pies()
+        self.print_edu_tables()
+
+    def print_origin_tables(self):
+        self.print_origin()
+        self.print_origin_men()
+        self.print_origin_women()
+
+    def plot_origin_pies(self):
+        self.plot_origin_pie()
+        self.plot_origin_men_pie()
+        self.plot_origin_women_pie()
+
+    def plot_and_print_origin(self):
+        self.plot_origin_pies()
+        self.print_origin_tables()
+
+    def visualize(self):
+        self.plot_and_print_age()
+        self.plot_and_print_edu()
+        self.plot_and_print_origin()
+        self.plot_and_print_service_types()
+
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
     v.parse_csv_file()
 
-    v.plot_age_line()
-    v.plot_age_pie()
-    v.plot_age_men_pie()
-    v.plot_age_women_pie()
-    v.print_age_table()
-    v.print_age_men_table()
-    v.print_age_women_table()
-
-    v.plot_service_types_pie()
-    v.plot_service_types_men_pie()
-    v.plot_service_types_women_pie()
-    v.print_service_types_table()
-    v.print_service_types_men_table()
-    v.print_service_types_women_table()
-
-    v.plot_edu_pie()
-    v.plot_edu_men_pie()
-    v.plot_edu_women_pie()
-    v.print_edu()
-    v.print_edu_men()
-    v.print_edu_women()
-
-    v.plot_origin_pie()
-    v.plot_origin_men_pie()
-    v.plot_origin_women_pie()
-    v.print_origin()
-    v.print_origin_men()
-    v.print_origin_women()
+    v.visualize()

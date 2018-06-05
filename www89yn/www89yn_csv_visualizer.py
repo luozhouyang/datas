@@ -3,6 +3,7 @@ import os
 from collections import Counter, OrderedDict
 
 import matplotlib.pyplot as plt
+from openpyxl import Workbook
 from prettytable import PrettyTable
 
 
@@ -273,9 +274,37 @@ class Visualizer:
         self.plot_and_print_origin()
         self.plot_and_print_service_types()
 
+    def _save_age_xlsx(self, wb):
+        age_sheet = wb.create_sheet(title="age", index=0)
+        row = ['']
+        men_row = ['男']
+        women_row = ['女']
+        for i in range(17, 50):
+            row.append(str(i))
+            if str(i) in self.ages_men_dict.keys():
+                v = int(self.ages_men_dict[str(i)])
+            else:
+                v = 0
+            men_row.append(v)
+            if str(i) in self.ages_women_dict.keys():
+                v = int(self.ages_women_dict[str(i)])
+            else:
+                v = 0
+            women_row.append(v)
+        age_sheet.append(row)
+        age_sheet.append(men_row)
+        age_sheet.append(women_row)
+
+    def save_to_xlsx(self):
+        file_name = "xlsx/datas.xlsx"
+        wb = Workbook()
+        self._save_age_xlsx(wb)
+        wb.save(file_name)
+
 
 if __name__ == "__main__":
     v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
     v.parse_csv_file()
 
-    v.visualize()
+    # v.visualize()
+    v.save_to_xlsx()

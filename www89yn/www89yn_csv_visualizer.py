@@ -1,10 +1,15 @@
 import csv
 import os
+import jieba
+
 from collections import Counter, OrderedDict
 
 import matplotlib.pyplot as plt
 from openpyxl import Workbook
 from prettytable import PrettyTable
+
+
+jieba.load_userdict("/home/allen/PycharmProjects/datas/jieba_dict.txt")
 
 
 class Visualizer:
@@ -25,6 +30,9 @@ class Visualizer:
         self.origin_dict = None
         self.origin_men_dict = None
         self.origin_women_dict = None
+        self.lives_dict = None
+        self.lives_men_dict = None
+        self.lives_women_dict = None
 
     def parse_csv_file(self):
         ages = []
@@ -40,11 +48,27 @@ class Visualizer:
         service_types = []
         service_types_men = []
         service_types_women = []
+        lives = []
+        lives_men = []
+        lives_women = []
 
         def callback(row):
             age = str(row[3].replace('岁', ''))
             gender = row[2].strip()
             education = row[9].strip()
+            live_cities = []
+            for r in jieba.cut(row[12], cut_all=True):
+                live_cities.append(r)
+            first = live_cities[0].strip()
+            if first:
+                if len(first) >= 2:
+                    live = live_cities[0].strip()
+                    if live == '马来':
+                        live = '马来西亚'
+                else:
+                    live = '其他'
+            else:
+                live = '其他'
             origin = row[13].strip()
             services_tmp = row[18].strip().split(";")
             services = []
@@ -55,16 +79,19 @@ class Visualizer:
             educations.append(education)
             origins.append(origin)
             service_types.extend(services)
+            lives.append(live)
             if gender == "男":
                 ages_men.append(age)
                 educations_men.append(education)
                 origins_men.append(origin)
                 service_types_men.extend(services)
+                lives_men.append(live)
             elif gender == "女":
                 ages_women.append(age)
                 educations_women.append(education)
                 origins_women.append(origin)
                 service_types_women.extend(services)
+                lives_women.append(live)
             genders.append(gender)
 
         self._read_csv_file(callback)
@@ -82,6 +109,9 @@ class Visualizer:
         self.origin_dict = OrderedDict(sorted(Counter(origins).items()))
         self.origin_men_dict = OrderedDict(sorted(Counter(origins_men).items()))
         self.origin_women_dict = OrderedDict(sorted(Counter(origins_women).items()))
+        self.lives_dict = OrderedDict(sorted(Counter(lives).items()))
+        self.lives_men_dict = OrderedDict(sorted(Counter(lives_men).items()))
+        self.lives_women_dict = OrderedDict(sorted(Counter(lives_women).items()))
 
         self.has_parse_file = True
 
@@ -312,6 +342,10 @@ class Visualizer:
         self._save_xlsx(wb, title='origin', index=3,
                         c0=self.origin_dict, c1=self.origin_men_dict, c2=self.origin_women_dict)
 
+    def _save_lives_xlsx(self, wb):
+        self._save_xlsx(wb, title='lives_in', index=4,
+                        c0=self.lives_dict, c1=self.lives_men_dict, c2=self.lives_women_dict)
+
     def save_to_xlsx(self):
         file_name = "xlsx/datas.xlsx"
         wb = Workbook()
@@ -319,6 +353,7 @@ class Visualizer:
         self._save_service_type_xlsx(wb)
         self._save_edu_xlsx(wb)
         self._save_origin_xlsx(wb)
+        self._save_lives_xlsx(wb)
         wb.save(file_name)
 
 

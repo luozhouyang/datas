@@ -323,7 +323,7 @@ class Visualizer:
 
 
 if __name__ == "__main__":
-    v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/info.csv")
+    v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/0_info.csv")
     v.parse_csv_file()
 
     # v.visualize()

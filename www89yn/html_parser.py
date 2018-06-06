@@ -1,7 +1,7 @@
 import os
 
-from www89yn.www89yn_patterns import Patterns
-from www89yn.www89yn_item import Item
+from www89yn.patterns import Patterns
+from www89yn.item import Item
 
 files = os.listdir("/home/allen/PycharmProjects/datas/www89yn_data")
 infos = []

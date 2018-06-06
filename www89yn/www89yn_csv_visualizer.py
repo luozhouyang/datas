@@ -274,31 +274,51 @@ class Visualizer:
         self.plot_and_print_origin()
         self.plot_and_print_service_types()
 
-    def _save_age_xlsx(self, wb):
-        age_sheet = wb.create_sheet(title="age", index=0)
+    @staticmethod
+    def _save_xlsx(wb, title, index, c0, c1, c2):
+        sheet = wb.create_sheet(title=title, index=index)
         row = ['']
         men_row = ['男']
         women_row = ['女']
-        for i in range(17, 50):
-            row.append(str(i))
-            if str(i) in self.ages_men_dict.keys():
-                v = int(self.ages_men_dict[str(i)])
+        for k, _ in c0.items():
+            row.append(k)
+            if k in c1.keys():
+                v0 = int(c1[k])
             else:
-                v = 0
-            men_row.append(v)
-            if str(i) in self.ages_women_dict.keys():
-                v = int(self.ages_women_dict[str(i)])
+                v0 = 0
+            men_row.append(v0)
+            if k in c2.keys():
+                v1 = int(c2[k])
             else:
-                v = 0
-            women_row.append(v)
-        age_sheet.append(row)
-        age_sheet.append(men_row)
-        age_sheet.append(women_row)
+                v1 = 0
+            women_row.append(v1)
+        sheet.append(row)
+        sheet.append(men_row)
+        sheet.append(women_row)
+
+    def _save_age_xlsx(self, wb):
+        self._save_xlsx(wb, title='age', index=0,
+                        c0=self.ages_dict, c1=self.ages_men_dict, c2=self.ages_women_dict)
+
+    def _save_service_type_xlsx(self, wb):
+        self._save_xlsx(wb, title='service_type', index=1,
+                        c0=self.service_types_dict, c1=self.service_types_men_dict, c2=self.service_types_women_dict)
+
+    def _save_edu_xlsx(self, wb):
+        self._save_xlsx(wb, title='education', index=2,
+                        c0=self.educations_dict, c1=self.educations_men_dict, c2=self.educations_women_dict)
+
+    def _save_origin_xlsx(self, wb):
+        self._save_xlsx(wb, title='origin', index=3,
+                        c0=self.origin_dict, c1=self.origin_men_dict, c2=self.origin_women_dict)
 
     def save_to_xlsx(self):
         file_name = "xlsx/datas.xlsx"
         wb = Workbook()
         self._save_age_xlsx(wb)
+        self._save_service_type_xlsx(wb)
+        self._save_edu_xlsx(wb)
+        self._save_origin_xlsx(wb)
         wb.save(file_name)
 
 

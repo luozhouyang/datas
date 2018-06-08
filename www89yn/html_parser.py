@@ -26,7 +26,7 @@ def _parse_line(line, type=1):
 for f in files:
     if not f.endswith(".txt"):
         continue
-    p = "/home/allen/PycharmProjects/datas/data/" + f
+    p = "/home/allen/PycharmProjects/datas/www89yn_data/" + f
     if not os.path.exists(p):
         continue
     with open(p, mode="rt", encoding="utf-8") as fin:
@@ -84,7 +84,7 @@ for f in files:
 outdir = "/home/allen/PycharmProjects/datas/www89yn_data/"
 if not os.path.exists(outdir):
     os.mkdir(outdir)
-outfile = outdir + '0_info.csv'
+outfile = outdir + '0_info_20180609.csv'
 with open(outfile, mode="wt", encoding="utf-8", buffering=8192) as f:
     f.write("姓名, Id, 性别, 年龄, 生日, 星座, 身高, 体重, 体型, 学位, 婚姻," +
             "职业, 居住城市, 籍贯, 可去地区, 是否收费, 服务时间, 使用语种, 提供服务," +

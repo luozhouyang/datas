@@ -51,8 +51,10 @@ class Downloader:
                     continuous_err_count = 0
                 if continuous_err_count == 50:
                     print("Continuous error count: %d" % continuous_err_count)
-                    print("Stop program")
-                    break
+                    # print("Stop program")
+                    # break
+                    time.sleep(60 * 60)
+                    self.download()
                 prev_err_id = id
                 continue
             else:

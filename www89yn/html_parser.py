@@ -36,48 +36,70 @@ for f in files:
                 continue
             if Patterns.PATTERN_NAME.findall(l):
                 item.name = _parse_line(l)
+                continue
             if Patterns.PATTERN_ID.findall(l):
                 item.id = _parse_line(l, type=2)
+                continue
             if Patterns.PATTERN_GENDER.findall(l):
                 item.gender = _parse_line(l)
+                continue
             if Patterns.PATTERN_AGE.findall(l):
                 item.age = _parse_line(l)
+                continue
             if Patterns.PATTERN_BIRTH.findall(l):
                 item.birth = _parse_line(l)
+                continue
             if Patterns.PATTERN_CONSTELLATION.findall(l):
                 item.constellation = _parse_line(l)
+                continue
             if Patterns.PATTERN_HEIGHT.findall(l):
                 item.height = _parse_line(l)
+                continue
             if Patterns.PATTERN_WEIGHT.findall(l):
                 item.weight = _parse_line(l)
+                continue
             if Patterns.PATTERN_SIZE.findall(l):
                 item.size = _parse_line(l)
+                continue
             if Patterns.PATTERN_DEGREE.findall(l):
                 item.degree = _parse_line(l)
+                continue
             if Patterns.PATTERN_MARRIAGE.findall(l):
                 item.marriage = _parse_line(l)
+                continue
             if Patterns.PATTERN_OCCUPATIONAL.findall(l):
                 item.occupational = _parse_line(l)
+                continue
             if Patterns.PATTERN_LIVES.findall(l):
                 item.lives = _parse_line(l)
+                continue
             if Patterns.PATTERN_ORIGIN.findall(l):
                 item.origin = _parse_line(l)
+                continue
             if Patterns.PATTERN_AREA.findall(l):
                 item.area = _parse_line(l)
+                continue
             if Patterns.PATTERN_PAYMENT.findall(l):
                 item.payment = _parse_line(l, type=3)
+                continue
             if Patterns.PATTERN_SERVE_TIME.findall(l):
                 item.serve_time = _parse_line(l)
+                continue
             if Patterns.PATTERN_LANGUAGE.findall(l):
                 item.language = _parse_line(l)
-            if Patterns.PATTERN_SERVE_TYPE.findall(l):
+                continue
+            if Patterns.PATTERN_SERVICE_TYPE_PROVIDED.findall(l) or Patterns.PATTERN_SERVICE_TYPE_NEEDED.findall(l):
                 item.serve_type = _parse_line(l)
+                continue
             if Patterns.PATTERN_HOBBITS.findall(l):
                 item.hobbits = _parse_line(l)
+                continue
             if Patterns.PATTERN_CHARACTERISTIC.findall(l):
                 item.character = _parse_line(l)
+                continue
             if Patterns.PATTERN_MESSAGE.findall(l):
                 item.message = _parse_line(l)
+                continue
         if item.id:
             # print(count)
             infos.append(item)

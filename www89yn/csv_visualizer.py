@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from openpyxl import Workbook
 from prettytable import PrettyTable
 
-
 jieba.load_userdict("/home/allen/PycharmProjects/datas/jieba_dict.txt")
 
 
@@ -59,6 +58,8 @@ class Visualizer:
             live_cities = []
             for r in jieba.cut(row[12], cut_all=True):
                 live_cities.append(r)
+            if len(live_cities) == 0:
+                live_cities.append('其它')
             first = live_cities[0].strip()
             if first:
                 if len(first) >= 2:
@@ -358,8 +359,8 @@ class Visualizer:
 
 
 if __name__ == "__main__":
-    v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/0_info.csv")
+    v = Visualizer("/home/allen/PycharmProjects/datas/www89yn_data/0_info_20180609.csv")
     v.parse_csv_file()
 
-    # v.visualize()
+    v.visualize()
     v.save_to_xlsx()

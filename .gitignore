@@ -1,9 +1,9 @@
 venv
 .idea
 out
-www89yn/__pycache__/
-www89yn/images
-www89yn/xlsx
+bajiuwang/__pycache__/
+bajiuwang/images
+bajiuwang/xlsx
 data/
 zuyouw_data
 www89yn_data

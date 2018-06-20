@@ -81,7 +81,7 @@ class Downloader:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--base_url", type=str, default="http://www.89yn.com/member.asp?id=")
-    parser.add_argument("--record_file", type=str, default="/home/allen/PycharmProjects/datas/www89yn/record.txt",
+    parser.add_argument("--record_file", type=str, default="/home/allen/PycharmProjects/datas/bajiuwang/record.txt",
                         help="A file to save latest download id.")
     parser.add_argument("--save_folder", type=str, default="/home/allen/PycharmProjects/datas/www89yn_data",
                         help="A folder to save download files.")

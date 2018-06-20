@@ -58,7 +58,7 @@ git clone https://github.com/luozhouyang/datas
 
 ### HTML页面的解析
 下载好数据之后，即可启动解析程序，提取出你想要的信息。按照[bajiuwang/patterns.py](bajiuwang/patterns.py)的格式添加需要解析的内容。  
-运行[bajiuwang/html_parser.py](bajiuwamg/html_parser.py)文件，即可开始解析。  
+运行[bajiuwang/html_parser.py](bajiuwang/html_parser.py)文件，即可开始解析。  
 如果你设置了其他的下载目录，在改文件的`file`一行改成你自定义的目录即可。  
 本步骤生成的CSV文件位于前一步骤的相同目录，文件名为`0_info.csv`，你可以在`html_parser.py`文件中自行更改文件名。  
 

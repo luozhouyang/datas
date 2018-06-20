@@ -35,6 +35,8 @@ git clone https://github.com/luozhouyang/datas
 ```
 下载后解压（如果是下载ZIP压缩文件），然后使用你喜欢的文本编辑器或者IDE打开项目即可。推荐Pycharm Community。
 
+然后按照Pycharm的提示安装依赖库。  
+
 该代码主要有以下几个步骤：
 * 下载html页面(保存数据源，不是很必要)
 * 解析html文件，提取有效信息，保存为CSV文件
@@ -54,6 +56,37 @@ git clone https://github.com/luozhouyang/datas
 记录该`$ID`的文件在程序当前目录，名为的`record.txt`文件。  
 下载的HTML页面默认保存在本项目的根目录下的文件夹，具体目录你可以自己设置。
 
+### HTML页面的解析
+下载好数据之后，即可启动解析程序，提取出你想要的信息。按照[bajiuwang/patterns.py](bajiuwang/patterns.py)的格式添加需要解析的内容。  
+运行[bajiuwang/html_parser.py](bajiuwamg/html_parser.py)文件，即可开始解析。  
+如果你设置了其他的下载目录，在改文件的`file`一行改成你自定义的目录即可。  
+本步骤生成的CSV文件位于前一步骤的相同目录，文件名为`0_info.csv`，你可以在`html_parser.py`文件中自行更改文件名。  
+
+### 根据CSV文件进行可视化  
+根据前面步骤生成的CSV文件，可以进一步可视化。使用`matplotlib`和`PrettyTable`两个库进行图的绘制和表格的输出。  
+
+要生成图表，只需要运行[bajiuwang/csv_visualizer.py](bajiuwang/csv_visualizer.py)文件即可。
+生成的图片保存在当前目录的`images`文件夹内。输出的表，直接打印在终端。  
+
+同时也会将数据输出到EXCEL表格文件，保存在当前目录下的`datas.xlsx`文件，方便用户处理。
+
+### 使用EXCEL处理输出文件  
+上一个步骤输出的`datas.xlsx`文件，使用强大的Microsoft Excel软件打开，可以用来制作各种类型的图表。
 
 ## matlibplot中文显示的问题  
 参考 [matlibplot显示中文](https://monkey0105.github.io/2016/10/10/matplotlib-chinese-display/)  
+
+## License
+   Copyright 2018 luozhouyang.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
